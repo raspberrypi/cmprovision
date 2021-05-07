@@ -1,7 +1,0 @@
-#!/bin/sh
-set -e
-# Automatically added by dh_systemd_start/12.10ubuntu1
-if [ -d /run/systemd/system ]; then
-	deb-systemd-invoke stop 'cmprovision-dnsmasq.service' 'cmprovision-rpiboot.service' >/dev/null || true
-fi
-# End automatically added section

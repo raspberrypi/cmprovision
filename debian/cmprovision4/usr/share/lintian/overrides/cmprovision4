@@ -1,8 +1,0 @@
-cmprovision4: package-contains-vcs-control-file *
-cmprovision4: executable-not-elf-or-script *
-cmprovision4: shell-script-fails-syntax-check var/lib/cmprovision/*
-cmprovision4: arch-independent-package-contains-binary-or-object var/lib/cmprovision/scriptexecute/start4.elf
-cmprovision4: embedded-library var/lib/cmprovision/scriptexecute/start4.elf: libpng
-cmprovision4: script-not-executable var/lib/cmprovision/*
-cmprovision4: statically-linked-binary var/lib/cmprovision/scriptexecute/start4.elf
-cmprovision4: embedded-php-library var/lib/cmprovision/vendor/laravel/framework/src/Illuminate/Mail/Markdown.php please use libmarkdown-php

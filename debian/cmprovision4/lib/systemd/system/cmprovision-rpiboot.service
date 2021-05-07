@@ -1,9 +1,0 @@
-[Unit]
-Description=rpiboot
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/rpiboot -l -d /var/lib/cmprovision/scriptexecute
-
-[Install]
-WantedBy=multi-user.target

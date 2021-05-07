@@ -1,3 +1,0 @@
-/var/lib/cmprovision/etc/dnsmasq.conf
-/etc/nginx/sites-available/cmprovision
-/etc/sudoers.d/010_cmprovision

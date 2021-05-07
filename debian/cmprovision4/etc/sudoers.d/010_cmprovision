@@ -1,1 +1,0 @@
-www-data ALL=(ALL) NOPASSWD: /bin/systemctl restart cmprovision-dnsmasq 
