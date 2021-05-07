@@ -1,0 +1,12 @@
+cmprovision4 (0.3) UNRELEASED; urgency=medium
+
+  * Add EEPROM firmware support.
+  * Add static IP support.
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Thu, 15 Apr 2021 21:34:43 +0200
+
+cmprovision4 (0.1) UNRELEASED; urgency=medium
+
+  * Initial release.
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Sun, 04 Apr 2021 23:45:51 +0200

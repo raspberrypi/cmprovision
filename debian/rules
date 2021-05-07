@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+WEB_CONTENT = debian/cmprovision4/var/lib/cmprovision/
+
+%:
+	dh $@ --with systemd
+
+override_dh_strip:
+	dh_strip --exclude=.elf
+
+override_dh_fixperms:
+	dh_fixperms
+	chown -R www-data:www-data $(WEB_CONTENT)

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "remove" ]; then
+    rm -f /var/lib/cmprovision/.env
+    rm -rf /var/lib/cmprovision/storage /var/lib/cmprovision/database
+fi
+
+#DEBHELPER#
+
+exit 0

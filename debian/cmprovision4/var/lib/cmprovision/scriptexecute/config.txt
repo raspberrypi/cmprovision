@@ -1,0 +1,10 @@
+dtoverlay=dwc2,dr_mode=peripheral
+
+# Set the pull ups for jumper reading
+gpio=5,13,21=pu
+
+# For flashrom
+dtparam=audio=off
+dtoverlay=spi-gpio40-45
+
+initramfs scriptexecute.img

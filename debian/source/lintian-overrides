@@ -1,0 +1,4 @@
+cmprovision4 source: source-contains-prebuilt-windows-binary vendor/symfony/console/Resources/bin/hiddeninput.exe
+cmprovision4 source: source-is-missing public/js/app.js line length is 32707 characters (>512)
+cmprovision4 source: source-is-missing vendor/livewire/livewire/dist/livewire.js line length is 8515 characters (>512)
+cmprovision4 source: source-is-missing scriptexecute/start4.elf

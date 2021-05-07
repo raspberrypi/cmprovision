@@ -1,0 +1,63 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+  configure)
+
+    PHP_VERSION=`echo "<?php echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" | php`
+
+    if grep -q "fastcgi_pass unix:/run/php/php-fpm.sock" "/etc/nginx/sites-available/cmprovision"; then
+
+        # Change nginx configuration to point to exact PHP version socket file
+        echo "PHP version detected: $PHP_VERSION"
+        sed -i "s#/run/php/php-fpm.sock#/run/php/php${PHP_VERSION}-fpm.sock#" "/etc/nginx/sites-available/cmprovision"
+        echo "Changed socket file to /run/php/php${PHP_VERSION}-fpm.sock in /etc/nginx/sites-available/cmprovision"
+    fi
+
+    if ! groups www-data | grep -q systemd-journal; then
+        # Allow webserver user to read logs
+        adduser www-data systemd-journal
+    fi
+
+    if [ ! -e /var/lib/cmprovision/.env ]; then
+
+        # Set Laravel app key
+        install -o www-data -g www-data -m 600 /var/lib/cmprovision/env.example /var/lib/cmprovision/.env
+        /var/lib/cmprovision/artisan key:generate
+        /var/lib/cmprovision/artisan config:cache
+
+        # Make sure log is owned by www-data
+        touch /var/lib/cmprovision/storage/logs/laravel.log
+        chown www-data:www-data /var/lib/cmprovision/storage/logs/laravel.log
+
+        # Enlarge php-fpm file upload size
+        echo "Enlarging php maximum file upload size"
+        PHP_INI=`echo "<?php echo str_replace('cli', 'fpm', php_ini_loaded_file() );" | php`
+        sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 8G/" "$PHP_INI"
+        sed -i "s/post_max_size = 8M/post_max_size = 8G/" "$PHP_INI"
+        deb-systemd-invoke restart php${PHP_VERSION}-fpm || true
+
+        # Enable site in nginx
+        echo "Enabling CM provision webinterface in nginx"
+        ln -sf /etc/nginx/sites-available/cmprovision /etc/nginx/sites-enabled/cmprovision
+        rm -f /etc/nginx/sites-enabled/default
+        deb-systemd-invoke restart nginx || true
+    fi
+
+    if [ ! -e /var/lib/cmprovision/database/database.sqlite ]; then
+        touch /var/lib/cmprovision/database/database.sqlite
+        chown www-data:www-data /var/lib/cmprovision/database/database.sqlite
+        chmod 600 /var/lib/cmprovision/database/database.sqlite
+        echo "Initializing database"
+        /var/lib/cmprovision/artisan migrate --seed
+    else
+        /var/lib/cmprovision/artisan migrate
+    fi
+
+  ;;
+esac
+
+#DEBHELPER#
+
+exit 0

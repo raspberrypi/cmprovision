@@ -1,0 +1,1 @@
+usbipv6ll readjumper script=http://{server}/scriptexecute?serial={serial}&model={model}&storagesize={storagesize}&mac={mac}&jumper={jumper}
