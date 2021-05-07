@@ -1,11 +1,9 @@
-===
 CM4 provisioning system
 ===
 
 Webapplication to mass program Compute Module 4 devices.
 
 
-==
 Usage
 ==
 
@@ -45,7 +43,6 @@ Reboot afterwards.
 - You can now access the webinterface with a web browser on the wifi IP.
 
 
-==
 Development
 ==
 
@@ -58,11 +55,9 @@ In particular note:
 * if you want to use Tailwind css styles not already used in the application run: `npm run prod` after adding the html to have the .css file rebuild with the used styles included. (alternatively can run `npm run dev` to include all styles. But will result in a large .css file, so only use that during development)
 * if you modify .blade files make sure you regenerate the cache with: `./artisan view:cache`
 
-
-==
 License
 ==
 
-The main code of the CM4 provisioning system is made available under the terms of the BSD 3-clause ("ne"w) license.
+The main code of the CM4 provisioning system is made available under the terms of the BSD 3-clause ("new") license.
 Look in the "vendor" directory (after running `composer --install`) to consult the open source licenses of the various dependencies like the Laravel framework used.
 
