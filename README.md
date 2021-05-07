@@ -41,7 +41,7 @@ sudo apt install ./cmprovision4_*_all.deb
 5) set a web application username and password with:
 
 ```
-/var/lib/cmprovision/artisan auth:create-user
+sudo /var/lib/cmprovision/artisan auth:create-user
 ```
 
 - You can now access the webinterface with a web browser on the wifi IP.
