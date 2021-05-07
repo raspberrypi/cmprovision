@@ -13,7 +13,7 @@ class Settings extends Component
     public $ip, $mac, $detectedMacs;
     public $hosts;
     public $logModalOpen = false, $staticModalOpen = false;
-    const DEFAULT_OUI_FILTER = "b8:27:eb:*:*:*\ndc:a6:32:*:*:*\n";
+    const DEFAULT_OUI_FILTER = "b8:27:eb:*:*:*\ndc:a6:32:*:*:*\ne4:5f:01:*:*:*\n";
 
     public function render()
     {

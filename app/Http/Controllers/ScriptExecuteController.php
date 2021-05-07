@@ -69,8 +69,8 @@ class ScriptExecuteController extends Controller
 
         $this->cm = Cm::updateOrCreate(['serial' => $this->serial], [
             'serial' => $this->serial,
-            'mac'    => $req->query('mac') ? $req->query('mac') 
-                        : "b8:27:eb:".substr($this->serial, -6, 2).":".substr($this->serial, -4, 2).":".substr($this->serial, -2, 2),
+            'mac'    => $req->query('mac') ? $req->query('mac')
+                        : "MAC-PARAMETER-MISSING-".$this->serial,
             'model'  => $req->query('model'),
             'memory_in_gb' => $memoryInGb,
             'storage' => $req->query('storagesize') ? $req->query('storagesize')*512 : null,
@@ -215,7 +215,7 @@ class ScriptExecuteController extends Controller
         {
             $this->cm->post_script_output = $logfile;
         }
-        
+
         if ($retcode)
         {
             if ($phase == "dd" || $phase == "preinstall") {
