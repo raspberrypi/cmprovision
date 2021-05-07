@@ -12,7 +12,7 @@ Using the webapplication as end-user.
 - Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards connected. Do NOT connect eth0 to your office/public network, or it may "provision" other Pi devices in your network as well.
 You do can use wifi to connect to your local network.
 
-1) start with a fresh RPI OS (Lite) installation.
+1) start with a fresh RPI OS (Lite) installation.  For simplicity, use rpi-imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and WiFi.
 
 2) configure eth0 to have a static IP of 172.20.0.1 inside a /16 subnet (netmask 255.255.0.0)
 
