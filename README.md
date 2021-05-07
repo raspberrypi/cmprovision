@@ -34,6 +34,10 @@ Reboot afterwards.
 
 4) install the ready-made .deb provided ( https://github.com/raspberrypi/cmprovision/releases/ )
 
+```
+sudo apt install ./cmprovision4_*_all.deb
+```
+
 5) set a web application username and password with:
 
 ```
