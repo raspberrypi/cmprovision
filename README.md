@@ -14,6 +14,8 @@ You do can use wifi to connect to your local network.
 
 1) start with a fresh RPI OS (Lite) installation.  For simplicity, use rpi-imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and WiFi.
 
+**NOTE:** If you intend to write images larger than 2 GB, you need to install the **64-bit** edition of RPI OS, available at: https://downloads.raspberrypi.org/raspios_lite_arm64/images/
+
 2) configure eth0 to have a static IP of 172.20.0.1 inside a /16 subnet (netmask 255.255.0.0)
 
 ```
