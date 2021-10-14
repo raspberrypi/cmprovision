@@ -42,7 +42,7 @@ Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards co
     sudo /var/lib/cmprovision/artisan auth:create-user  
     ```
 
-You can now access the webinterface with a web browser on the wifi IP.
+You can now access the web interface with a web browser on the wifi IP.
 
 
 ## Development ##
