@@ -7,7 +7,7 @@ Web application to mass program Compute Module 4 devices.
 
 Using the web application as an end user.
 
-- Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards connected. **Do NOT connect eth0 to your office/public network, or it may provision other Pi devices in your network as well.** You can use the wifi interface to connect to your local network.
+Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards connected. **Do NOT connect eth0 to your office/public network, or it may provision other Pi devices in your network as well.** You can use the wifi interface to connect to your local network.
 
 1. Start with a fresh Raspberry Pi OS (Lite) installation.  For simplicity, use Raspberry Pi Imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and wifi.  
     
