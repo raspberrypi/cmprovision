@@ -32,15 +32,15 @@ Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards co
 
 1. Install the ready-made .deb package from https://github.com/raspberrypi/cmprovision/releases/:  
 
-```
-sudo apt install ./cmprovision4_*_all.deb  
-```
+    ```
+    sudo apt install ./cmprovision4_*_all.deb  
+    ```
 
 1. Set a web application username and password with:  
 
-```
-sudo /var/lib/cmprovision/artisan auth:create-user  
-```
+    ```
+    sudo /var/lib/cmprovision/artisan auth:create-user  
+    ```
 
 You can now access the webinterface with a web browser on the wifi IP.
 
