@@ -12,12 +12,14 @@ class Images extends Component
 
     public $images, $maxfilesize, $freediskspace;
     public $isOpen = false;
+    public $os32bit = false;
 
     public function render()
     {
         $this->images = Image::orderBy('filename')->orderBy('id')->get();
         $this->maxfilesize = UploadedFile::getMaxFilesize();
         $this->freediskspace = min( disk_free_space("/tmp"), disk_free_space(public_path("uploads")));
+        $this->os32bit = (PHP_INT_MAX == 2147483647);
 
         return view('livewire.images');
     }

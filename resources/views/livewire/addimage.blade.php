@@ -26,6 +26,16 @@
                     <li> Be aware that after upload is finished it will compute the sha256sum on the server, which may take some time.
                   </ul>
               </div>
+
+              @if ($os32bit)
+                <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
+                  <div class="flex">
+                    <div>
+                      <p class="text-sm">The provisioning system seems to be running on a 32-bit OS. As a result image upload size is limited to 2 GB.</p>
+                    </div>
+                  </div>
+                </div>
+              @endif               
         </div>
       </div>
   
