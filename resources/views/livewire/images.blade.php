@@ -42,7 +42,7 @@
                 <tbody>
                     @forelse($images as $i)
                     <tr>
-                        <td class="border px-4 py-2">{{ $i->filename }}</td>
+                        <td class="border px-4 py-2">{{ $i->filename }} (added {{ date_format($i->created_at, "d-M-Y") }})</td>
                         <td class="border px-4 py-2">{{ number_format($i->filesize()/1000000000,1) }} GB</td>
                         <td class="border px-4 py-2">{{ $i->sha256 }}</td>
                         <td class="border px-4 py-2">
