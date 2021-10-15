@@ -22,7 +22,7 @@ class AddImageController extends Controller
             if (!$value instanceof \Illuminate\Http\UploadedFile) {
                 return false;
             }
-    
+
             $extension = $value->getClientOriginalExtension();
             return $extension != '' && in_array($extension, $parameters);
         }, "Only .gz, .bz2 and .xz images are supported");
@@ -43,7 +43,14 @@ class AddImageController extends Controller
         $data['image']->move(public_path("uploads"), $i->filename_on_server);
         $i->save();
 
-        session()->flash('message', 'Image added.');        
-        return redirect()->route('images');
+        if ($req->wantsJson())
+        {
+            return $i;
+        }
+        else
+        {
+            session()->flash('message', 'Image added.');
+            return redirect()->route('images');
+        }
     }
 }

@@ -1,8 +1,17 @@
+cmprovision4 (1.1) UNRELEASED; urgency=medium
+
+  * nginx: turn off request buffering
+  * warn user of 32-bit OS of file upload size limit
+  * image list: add file upload date
+  * add simple API support for uploading new images
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Fri, 15 Oct 2021 21:48:42 +0200
+
 cmprovision4 (1.0) UNRELEASED; urgency=medium
 
   * Add EEPROM firmware support.
   * Add static IP support.
-  * Add e4:5f:01 OUI 
+  * Add e4:5f:01 OUI
 
  -- Floris Bos <bos@je-eigen-domein.nl>  Fri, 07 May 2021 13:47:40 +0200
 
