@@ -36,6 +36,7 @@ case "$1" in
         PHP_INI=`echo "<?php echo str_replace('cli', 'fpm', php_ini_loaded_file() );" | php`
         sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 8G/" "$PHP_INI"
         sed -i "s/post_max_size = 8M/post_max_size = 8G/" "$PHP_INI"
+        sed -i "s/max_input_time = 60/max_input_time = 86400/" "$PHP_INI"
         deb-systemd-invoke restart php${PHP_VERSION}-fpm || true
 
         # Enable site in nginx
