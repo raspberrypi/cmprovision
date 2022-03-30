@@ -1,10 +1,16 @@
-cmprovision4 (1.2) UNRELEASED; urgency=medium
+cmprovision4 (1.3) unstable; urgency=medium
+
+  * Bump Pi firmware for newer CM4 modules
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Wed, 30 Mar 2022 18:26:12 +0200
+
+cmprovision4 (1.2) unstable; urgency=medium
 
   * php-fpm: fix maximum_input_time to accomodate large/slow uploads
 
  -- Floris Bos <bos@je-eigen-domein.nl>  Wed, 17 Nov 2021 20:00:36 +0100
 
-cmprovision4 (1.1) UNRELEASED; urgency=medium
+cmprovision4 (1.1) unstable; urgency=medium
 
   * nginx: turn off request buffering
   * warn user of 32-bit OS of file upload size limit
@@ -13,7 +19,7 @@ cmprovision4 (1.1) UNRELEASED; urgency=medium
 
  -- Floris Bos <bos@je-eigen-domein.nl>  Fri, 15 Oct 2021 21:48:42 +0200
 
-cmprovision4 (1.0) UNRELEASED; urgency=medium
+cmprovision4 (1.0) unstable; urgency=medium
 
   * Add EEPROM firmware support.
   * Add static IP support.
@@ -21,7 +27,7 @@ cmprovision4 (1.0) UNRELEASED; urgency=medium
 
  -- Floris Bos <bos@je-eigen-domein.nl>  Fri, 07 May 2021 13:47:40 +0200
 
-cmprovision4 (0.1) UNRELEASED; urgency=medium
+cmprovision4 (0.1) unstable; urgency=medium
 
   * Initial release.
 
