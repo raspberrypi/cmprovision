@@ -80,7 +80,7 @@ During provisioning a small utility operating system (scriptexecute) is USB boot
 on a predictable IPv6 link-local address that can be calculated based on the MAC address that the CM3 playing USB network adapter choses.
 The cmprovision4 .deb will configure this automatically for RPI OS (by putting "slaac hwaddr" in `/etc/dhcpcd.conf`), so no
 action on your part is required for network configuration when using RPI OS.
-However if you chose to run the CM provisioning under another Linux distribution with a different network manager than dhcpcd (e.g. Ubuntu), be aware that you need to setup this manually.
+However if you chose to use under another Linux distribution ON THE SERVER that uses a different network manager than dhcpcd (e.g. systemd-networkd or NetworkManager), be aware that you need to setup this manually.
 How you do this depends on the exact network manager used by your Linux distribution, so no generic instructions for this can be given.
 
 ## Development ##
