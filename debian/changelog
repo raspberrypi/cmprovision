@@ -1,3 +1,9 @@
+cmprovision4 (1.4) unstable; urgency=medium
+
+  * Add support for provisioning CM3 modules over USB
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Sun, 01 May 2022 00:35:59 +0200
+
 cmprovision4 (1.3) unstable; urgency=medium
 
   * Bump Pi firmware for newer CM4 modules

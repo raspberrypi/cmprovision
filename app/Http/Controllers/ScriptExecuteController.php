@@ -70,7 +70,7 @@ class ScriptExecuteController extends Controller
         $this->cm = Cm::updateOrCreate(['serial' => $this->serial], [
             'serial' => $this->serial,
             'mac'    => $req->query('mac') ? $req->query('mac')
-                        : "MAC-PARAMETER-MISSING-".$this->serial,
+                        : "b8:27:eb:".substr($this->serial, -6, 2).":".substr($this->serial, -4, 2).":".substr($this->serial, -2, 2),
             'model'  => $req->query('model'),
             'memory_in_gb' => $memoryInGb,
             'storage' => $req->query('storagesize') ? $req->query('storagesize')*512 : null,
@@ -103,7 +103,7 @@ class ScriptExecuteController extends Controller
         if ($server[0] == '[')
         {
             // From the CM's side IPv6LL address will end in %usb0
-            $server = substr($this->server, 0, -1).'%usb0]';
+            $server = substr($server, 0, -1).'%usb0]';
         }
 
         if ($project->eeprom_firmware)

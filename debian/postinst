@@ -56,6 +56,13 @@ case "$1" in
         /var/lib/cmprovision/artisan migrate
     fi
 
+    # The Ethernet-over-USB method used for provisioning CM3 requires server has predicatable IPv6 link-local addresses
+    if grep -q "slaac private" /etc/dhcpcd.conf; then
+        echo "Changing dhcpcd settings to let server have predictable IPv6 link-local address"
+        sed -i "s#slaac private#slaac hwaddr#" "/etc/dhcpcd.conf"
+        deb-systemd-invoke restart dhcpcd || true
+    fi
+
   ;;
 esac
 
