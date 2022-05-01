@@ -1,18 +1,18 @@
-# CM4 provisioning system #
+# CM provisioning system #
 
-Web application to mass program Compute Module 4 devices.
+Web application that can be run on a Pi 4 to mass program Compute Module devices.
 
 
-## Usage ##
+## Using the CM provisioning system to provision CM4 modules ##
 
 Using the web application as an end user.
 
 Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards connected. **Do NOT connect eth0 to your office/public network, or it may provision other Pi devices in your network as well.** You can use the wifi interface to connect to your local network.
 
-1. Start with a fresh Raspberry Pi OS (Lite) installation.  For simplicity, use Raspberry Pi Imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and wifi.  
+1. Start with a fresh 64-bit Raspberry Pi OS (Lite) installation.  For simplicity, use Raspberry Pi Imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and wifi.  
     
-    **NOTE:** If you intend to write images larger than 2 GB, you need to install the **64-bit** edition of Raspberry Pi OS, available at https://downloads.raspberrypi.org/raspios_lite_arm64/images/.  
-    
+    **NOTE:** If you intend to write images larger than 2 GB, you MUST install the **64-bit** edition of Raspberry Pi OS (Lite), which is available in Imager under the category "Raspberry Pi OS (other)" -> "Raspberry Pi OS Lite (64-bit)"
+
 1. Configure eth0 to have a static IP of 172.20.0.1 inside a /16 subnet (netmask 255.255.0.0):  
     
     ```
@@ -44,6 +44,44 @@ Make sure eth0 connects to an Ethernet switch that only has the CMIO 4 boards co
 
 You can now access the web interface with a web browser on the wifi IP.
 
+## Using the CM provisioning system to provision CM3(+) modules ##
+
+When provisioning CM3 modules, Ethernet is not used, but the images are transferred over USB instead.
+For that you need to connect a (good quality) USB-A to Micro-USB cable between the Pi 4 acting as server and the "USB slave" port of each CMIO board.
+If you want to provision more than 4 CMIO boards at a time, an USB hub can be used.
+Also connect power supplies to the "power in" micro-USB port of the CMIO boards, and make sure the J4 "USB slave boot enable" jumper is set to "en".
+
+Do NOT connect the Ethernet port of the Pi 4. You can use wifi to access the management web interface.
+
+
+1. Start with a fresh 64-bit Raspberry Pi OS (Lite) installation.  For simplicity, use Raspberry Pi Imager and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and wifi.  
+    
+    **NOTE:** If you intend to write images larger than 2 GB, you MUST install the **64-bit** edition of Raspberry Pi OS (Lite), which is available in Imager under the category "Raspberry Pi OS (other)" -> "Raspberry Pi OS Lite (64-bit)"
+
+1. Run `sudo apt update` to make sure your repository is up-to-date, and it is able to install dependencies.
+
+1. Install the ready-made .deb package from https://github.com/raspberrypi/cmprovision/releases/:  
+
+    ```
+    sudo apt install ./cmprovision4_*_all.deb  
+    ```
+
+1. Set a web application username and password with:  
+
+    ```
+    sudo /var/lib/cmprovision/artisan auth:create-user  
+    ```
+
+You can now access the web interface with a web browser on the wifi IP.
+
+### If running the cmprovisioning system on another OS than RPI OS ###
+
+During provisioning a small utility operating system (scriptexecute) is USB booted on the CM3 modules, which will pretend to be a USB network adapter, and expect to be able to reach the server
+on a predicable IPv6 link-local address that can be calculated based on the MAC address that the CM3 playing USB network adapter choses.
+The cmprovision4 .deb will configure this automatically for RPI OS (by putting "slaac hwaddr" in /etc/dhcpcd.conf), so no
+action on your part is required when using RPI OS.
+However if you chose to run the CM provisioning under any a Linux distribution with a different network manager than dhcpcd (e.g. Ubuntu), be aware that you need to setup this manually.
+How you do this depends on the exact network manager used by your Linux distribution, so no generic instructions for this can be given.
 
 ## Development ##
 
