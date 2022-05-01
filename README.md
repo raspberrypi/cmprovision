@@ -76,11 +76,11 @@ You can now access the web interface with a web browser on the wifi IP.
 
 ### If running the cmprovisioning system on another OS than RPI OS ###
 
-During provisioning a small utility operating system (scriptexecute) is USB booted on the CM3 modules, which will pretend to be a USB network adapter, and expect to be able to reach the server
-on a predicable IPv6 link-local address that can be calculated based on the MAC address that the CM3 playing USB network adapter choses.
-The cmprovision4 .deb will configure this automatically for RPI OS (by putting "slaac hwaddr" in /etc/dhcpcd.conf), so no
-action on your part is required when using RPI OS.
-However if you chose to run the CM provisioning under any a Linux distribution with a different network manager than dhcpcd (e.g. Ubuntu), be aware that you need to setup this manually.
+During provisioning a small utility operating system (scriptexecute) is USB booted on the CM3 modules, which will pretend to be a USB network adapter, and expects to be able to reach the server
+on a predictable IPv6 link-local address that can be calculated based on the MAC address that the CM3 playing USB network adapter choses.
+The cmprovision4 .deb will configure this automatically for RPI OS (by putting "slaac hwaddr" in `/etc/dhcpcd.conf`), so no
+action on your part is required for network configuration when using RPI OS.
+However if you chose to run the CM provisioning under another Linux distribution with a different network manager than dhcpcd (e.g. Ubuntu), be aware that you need to setup this manually.
 How you do this depends on the exact network manager used by your Linux distribution, so no generic instructions for this can be given.
 
 ## Development ##
