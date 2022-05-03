@@ -46,11 +46,11 @@ You can now access the web interface with a web browser on the wireless LAN IP a
 
 ## Provisioning Compute Module 3 and 3+ Devices ##
 
-This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules.
-
-When provisioning Compute Module 3 and 3+ modules, Ethernet is not used: instead the images are transferred over USB. Use a good quality USB A to micro USB cable between the Pi 4 acting as server and the `USB slave` port of each CMIO board containing the compute modules to be provisioned. If you wish to provision more than 4 compute modules at a time, a USB hub can be used. Connect power supplies to the `power in` micro USB port of the CMIO boards, and make sure the J4 `USB slave boot enable` jumper is set to `en`.
+This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules. Make sure eth0 connects to an Ethernet switch that only has the compute modules you wish to program connected.
 
 **WARNING:** Do NOT connect eth0 to your office/public network, since it may also provision other Raspberry Pi devices. Instead, use the wireless LAN interface to access the web interface, and your local network.
+
+When provisioning Compute Module 3 and 3+ modules, Ethernet is not used: instead the images are transferred over USB. Use a good quality USB A to micro USB cable between the Pi 4 acting as server and the `USB slave` port of each CMIO board containing the compute modules to be provisioned. If you wish to provision more than 4 compute modules at a time, a USB hub can be used. Connect power supplies to the `power in` micro USB port of the CMIO boards, and make sure the J4 `USB slave boot enable` jumper is set to `en`.
 
 
 1. Start with a fresh 64-bit Raspberry Pi OS (Lite) installation.  For simplicity, use [Raspberry Pi Imager](https://www.raspberrypi.com/software/) and the advanced settings menu (Ctrl-Shift-X) to set the password, hostname and wireless LAN configuration.  
