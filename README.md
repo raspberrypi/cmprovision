@@ -3,7 +3,7 @@
 Web application to mass program compute modules; designed to run on a Raspberry Pi 4. Compute Module 3, 3+ and 4 are supported.
 
 
-## Provisioning Compute Module 4 devices ##
+## Provisioning Compute Module 4 Devices ##
 
 This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules. Make sure eth0 connects to an Ethernet switch that only has the compute modules you wish to program connected.
 
@@ -44,7 +44,7 @@ This process requires a Raspberry Pi 4 which will be used solely to mass program
 
 You can now access the web interface with a web browser on the wireless LAN IP address.
 
-## Provisioning Compute Module 3 and 3+ devices ##
+## Provisioning Compute Module 3 and 3+ Devices ##
 
 This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules.
 
