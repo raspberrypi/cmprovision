@@ -46,7 +46,7 @@ You can now access the web interface with a web browser on the wireless LAN IP a
 
 ## Provisioning Compute Module 3 and 3+ Devices ##
 
-This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules. Make sure eth0 connects to an Ethernet switch that only has the compute modules you wish to program connected.
+This process requires a Raspberry Pi 4 which will be used solely to mass program compute modules.
 
 **WARNING:** Do NOT connect eth0 to your office/public network, since it may also provision other Raspberry Pi devices. Instead, use the wireless LAN interface to access the web interface, and your local network.
 
