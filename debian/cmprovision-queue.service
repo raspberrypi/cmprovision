@@ -1,0 +1,11 @@
+[Unit]
+Description=CMProvision queue worker
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/var/lib/cmprovision/artisan queue:work
+
+[Install]
+WantedBy=multi-user.target

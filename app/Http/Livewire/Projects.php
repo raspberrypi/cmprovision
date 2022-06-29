@@ -10,13 +10,15 @@ use App\Models\Script;
 use App\Models\Setting;
 use App\Models\Firmware;
 use Illuminate\Support\Str;
+use App\Jobs\ComputeSHA256;
 
 class Projects extends Component
 {
     public $isOpen = false;
     public $active = true;
     public $projects, $activeProject;
-    public $projectid, $name, $device, $storage, $image_id, $label_id, $label_moment, $selectedScripts, $firmware, $eeprom_settings;
+    public $projectid, $name, $device, $storage, $image_id, $label_id, $label_moment, $selectedScripts;
+    public $firmware, $eeprom_settings, $verify;
     public $images, $labels, $scripts, $beta_firmware, $stable_firmware;
 
     protected $rules = [
@@ -28,7 +30,8 @@ class Projects extends Component
         'firmware' => 'nullable|max:255',
         'eeprom_settings' => 'nullable|max:2024',
         'label_moment' => 'required|in:never,preinstall,postinstall',
-        'selectedScripts' => 'array'
+        'selectedScripts' => 'array',
+        'verify' => 'required|boolean'
     ];
 
     public function render()
@@ -74,6 +77,7 @@ class Projects extends Component
         $this->label_moment = 'never';
         $this->image_id = Image::max('id');
         $this->active = true;
+        $this->verify = false;
         $this->eeprom_settings = "[all]\nBOOT_UART=0\nWAKE_ON_GPIO=1\nPOWER_OFF_ON_HALT=0\n\n";
 
         /*if (count($this->stable_firmware))
@@ -96,6 +100,7 @@ class Projects extends Component
         $this->label_moment = $p->label_moment;
         $this->image_id = $p->image_id;
         $this->label_id = $p->label_id;
+        $this->verify = $p->verify;
         $this->active = $p->isActive();
         $this->selectedScripts = [];
         foreach ($p->scripts as $script)
@@ -119,13 +124,20 @@ class Projects extends Component
             'image_id' => $this->image_id ? $this->image_id : null,
             'label_id' => $this->label_id ? $this->label_id : null,
             'eeprom_firmware' => $this->firmware ? $this->firmware : null,
-            'eeprom_settings' => $this->eeprom_settings ? str_replace("\r", "", $this->eeprom_settings) : null
+            'eeprom_settings' => $this->eeprom_settings ? str_replace("\r", "", $this->eeprom_settings) : null,
+            'verify' => $this->verify
         ]);
         $project->scripts()->sync($this->selectedScripts);
 
         if ($this->active)
         {
             $this->setActive($project->id);
+        }
+
+        if ($this->verify && $this->image_id && !$project->image->uncompressed_sha256)
+        {
+            /* Queue SHA256 calculation job */
+            ComputeSHA256::dispatch($project->image);
         }
 
         $this->closeModal();

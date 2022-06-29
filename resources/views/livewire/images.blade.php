@@ -43,8 +43,14 @@
                     @forelse($images as $i)
                     <tr>
                         <td class="border px-4 py-2">{{ $i->filename }} (added {{ date_format($i->created_at, "d-M-Y") }})</td>
-                        <td class="border px-4 py-2">{{ number_format($i->filesize()/1000000000,1) }} GB</td>
-                        <td class="border px-4 py-2">{{ $i->sha256 }}</td>
+                        <td class="border px-4 py-2">
+                            <nobr>Comp.: {{ number_format($i->filesize()/1000000000,1) }} GB</nobr><br>
+                            <nobr>Uncomp.: {{ $i->uncompressed_size ? number_format($i->uncompressed_size/1000000000,1) : 'unknown' }} GB</nobr>
+                        </td>
+                        <td class="border px-4 py-2">
+                            {{ $i->sha256 ? $i->sha256 : "...still computing hash..." }}<br>
+                            {{ $i->uncompressed_sha256 ? $i->uncompressed_sha256 : "" }}
+                        </td>
                         <td class="border px-4 py-2">
                             <button wire:click="delete({{ $i->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                         </td>

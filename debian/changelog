@@ -1,3 +1,10 @@
+cmprovision4 (1.5) unstable; urgency=medium
+
+  * Add support for verifying that the image was written to storage 
+    correctly, by reading back the entire image from storage. 
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Thu, 30 Jun 2022 01:43:15 +0200
+
 cmprovision4 (1.4) unstable; urgency=medium
 
   * Add support for provisioning CM3 modules over USB

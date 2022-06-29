@@ -46,6 +46,10 @@ case "$1" in
         deb-systemd-invoke restart nginx || true
     fi
 
+    sed -i "s/QUEUE_CONNECTION=sync/QUEUE_CONNECTION=database/" /var/lib/cmprovision/.env
+    /var/lib/cmprovision/artisan config:clear
+    /var/lib/cmprovision/artisan view:clear
+
     if [ ! -e /var/lib/cmprovision/database/database.sqlite ]; then
         touch /var/lib/cmprovision/database/database.sqlite
         chown www-data:www-data /var/lib/cmprovision/database/database.sqlite

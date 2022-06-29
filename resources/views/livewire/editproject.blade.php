@@ -26,6 +26,13 @@
                   @error('image_id') <span class="text-red-500">{{ $message }}</span>@enderror
               </div>
               <div class="mb-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" id="verify" name="verify" wire:model.defer="verify" class="form-checkbox h-6 w-6 text-gray-700">
+                    <span class="ml-3 text-sm">Verify that image was written correctly</span>
+                  </label>
+                  @error('verify') <span class="text-red-500">{{ $message }}</span>@enderror
+              </div>
+              <div class="mb-4">
                   <label for="storage" class="block text-gray-700 text-sm font-bold mb-2">Destination storage device:</label>
                   <input type="text" id="storage" name="storage" wire:model.defer="storage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                   @error('storage') <span class="text-red-500">{{ $message }}</span>@enderror

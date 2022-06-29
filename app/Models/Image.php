@@ -9,6 +9,8 @@ class Image extends Model
 {
     use HasFactory;
 
+    protected $casts = ['uncompressed_size' => 'integer'];
+
     function imagepath()
     {
         return public_path('uploads/'.$this->filename_on_server);

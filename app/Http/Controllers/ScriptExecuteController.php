@@ -95,6 +95,20 @@ class ScriptExecuteController extends Controller
             $this->logInfo("Could not provision, because there is no active project", "error");
             return "echo 'No active project set in CMprovisioning'";
         }
+        if ($project->verify && $image)
+        {
+            if (!$image->uncompressed_sha256)
+            {
+                $this->logInfo("Verification enabled, but uncompressed SHA256 not computed yet, try again later...", "error");
+                return "echo 'Verification enabled, but uncompressed SHA256 not computed yet, try again later...'";
+            }
+            if ($image->uncompressed_size % 512 != 0)
+            {
+                $this->logInfo("Image is not a valid disk image. Uncompressed size not dividable by sector size of 512 bytes.", "error");
+                return "echo 'Image is not a valid disk image. Uncompressed size not dividable by sector size of 512 bytes.'";
+
+            }
+        }
 
         $preinstall_scripts = $project->scripts()->where('script_type','preinstall')->orderBy('priority')->orderBy('id')->get();
         $postinstall_scripts = $project->scripts()->where('script_type','postinstall')->orderBy('priority')->orderBy('id')->get();
@@ -121,6 +135,26 @@ class ScriptExecuteController extends Controller
                              . "echo \"$eeprom_sha256  pieeprom.bin\" | sha256sum -c\n"
                              . 'flashrom -p "linux_spi:dev=/dev/spidev0.0,spispeed=16000" -w "pieeprom.bin"'."\n";
             $preinstall_scripts->prepend($fscript);
+        }
+
+        if ($project->verify && $image)
+        {
+            $fscript = new Script;
+            $fscript->id = 0;
+            $fscript->name = 'Verifying written image';
+            $fscript->bg = false;
+
+            if ($image->uncompressed_size % 1048576 == 0)
+                $ddline = "dd if=".$project->storage." bs=1M count=".($image->uncompressed_size / 1048576);
+            else
+                $ddline = "dd if=".$project->storage." count=".($image->uncompressed_size / 512);
+
+            $fscript->script = "#!/bin/sh\n"
+                             . "set -e\n"
+                             . 'READ_SHA256=$('."$ddline | sha256sum | awk '{print $1}')\n"
+                             . 'echo Computed SHA256: "$READ_SHA256"'."\n"
+                             . 'if [ "$READ_SHA256" = "'.$image->uncompressed_sha256.'" ]; then echo Verification successful!; else echo Verification failed; exit 2; fi'."\n";
+            $postinstall_scripts->prepend($fscript);
         }
 
         $msg = "Provisioning started.";

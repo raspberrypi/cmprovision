@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\Image;
+use App\Jobs\ComputeSHA256;
 
 class AddImageController extends Controller
 {
@@ -34,7 +35,8 @@ class AddImageController extends Controller
         $i = new Image;
         $i->filename = $data['image']->getClientOriginalName();
         $i->filename_extension = $data['image']->getClientOriginalExtension();
-        $i->sha256 = hash_file("sha256", $data['image']->getPathname());
+        //$i->sha256 = hash_file("sha256", $data['image']->getPathname());
+        $i->sha256 = '';
         do
         {
             $i->filename_on_server = Str::random(40).".".$i->filename_extension;
@@ -42,6 +44,9 @@ class AddImageController extends Controller
 
         $data['image']->move(public_path("uploads"), $i->filename_on_server);
         $i->save();
+
+        /* Queue SHA256 calculation job */
+        ComputeSHA256::dispatch($i);
 
         if ($req->wantsJson())
         {
