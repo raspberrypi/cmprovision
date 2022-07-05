@@ -59,6 +59,21 @@
                   @error('firmware') <span class="text-red-500">{{ $message }}</span>@enderror
               </div>
               @if ($firmware != "")
+              @if ($offerSettingsReset)
+                <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
+                  <div class="flex">
+                    <div>
+                      <p class="text-sm">You are currently using custom EEPROM settings which
+                                         differ from the default settings of the newly selected EEPROM image.</p>
+                      <div class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                        <button wire:click="resetEEPROMsettings" class="border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                          Reset settings to default
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              @endif
               <div class="mb-4">
                   <label for="eeprom_settings" class="block text-gray-700 text-sm font-bold mb-2">EEPROM settings:</label>
                   <textarea type="text" id="eeprom_settings" name="eeprom_settings" wire:model.defer="eeprom_settings" class="h-28 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>

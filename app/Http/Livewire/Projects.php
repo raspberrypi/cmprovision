@@ -17,7 +17,7 @@ class Projects extends Component
     public $isOpen = false;
     public $active = true;
     public $projects, $activeProject;
-    public $projectid, $name, $device, $storage, $image_id, $label_id, $label_moment, $selectedScripts;
+    public $projectid, $name, $device, $storage, $image_id, $label_id, $label_moment, $selectedScripts, $offerSettingsReset;
     public $firmware, $eeprom_settings, $verify;
     public $images, $labels, $scripts, $beta_firmware, $stable_firmware;
 
@@ -50,6 +50,37 @@ class Projects extends Component
         return view('livewire.projects');
     }
 
+    /* Called when EEPROM firmware selection changes */
+    public function updatingFirmware($newvalue)
+    {
+        if (!$newvalue)
+            return;
+
+        $oldDefaultSettings = $this->firmware ? $this->getEepromSettingsFromFirmwareFile($this->firmware) : '';
+        $newDefaultSettings = $this->getEepromSettingsFromFirmwareFile($newvalue);
+        $currentSettings = str_replace("\r", "", $this->eeprom_settings);
+
+        if ($currentSettings
+            && $currentSettings != $oldDefaultSettings
+            && $currentSettings != $newDefaultSettings)
+        {
+            /* Do not overwrite user's custom settings by default
+               do offer user option to 'reset settings' */
+            $this->offerSettingsReset = true;
+        }
+        else
+        {
+            $this->eeprom_settings = $newDefaultSettings;
+            $this->offerSettingsReset = false;
+        }
+    }
+
+    public function resetEEPROMsettings()
+    {
+        $this->eeprom_settings = $this->getEepromSettingsFromFirmwareFile($this->firmware);
+        $this->offerSettingsReset = false;
+    }
+
     public function openModal()
     {
         $this->resetErrorBag();
@@ -78,14 +109,9 @@ class Projects extends Component
         $this->image_id = Image::max('id');
         $this->active = true;
         $this->verify = false;
-        $this->eeprom_settings = "[all]\nBOOT_UART=0\nWAKE_ON_GPIO=1\nPOWER_OFF_ON_HALT=0\n\n";
-
-        /*if (count($this->stable_firmware))
-        {
-            $this->firmware = $this->stable_firmware[0]['path'];
-        }
-        else*/
-            $this->firmware = '';
+        $this->eeprom_settings = '';
+        $this->firmware = '';
+        $this->offerSettingsReset = false;
 
         $this->openModal();
     }
@@ -109,6 +135,7 @@ class Projects extends Component
         }
         $this->firmware = $p->eeprom_firmware;
         $this->eeprom_settings = $p->eeprom_settings;
+        $this->offerSettingsReset = false;
         $this->openModal();
     }
 
@@ -270,5 +297,56 @@ class Projects extends Component
         $data = substr($data, 0, $offset+4+$FILE_HDR_LEN).$settings.substr($data, $offset+4+$FILE_HDR_LEN+$MAX_BOOTCONF_SIZE);
 
         return true;
+    }
+
+    function getEepromSettingsFromFirmwareFile($fn)
+    {
+        $data = @file_get_contents(Firmware::basedir().'/'.$fn);
+        return $this->getEepromSettings($data);
+    }
+
+    function getEepromSettings(&$data)
+    {
+        $MAGIC = 0x55aaf00f;
+        $MAGIC_MASK = 0xfffff00f;
+        $FILE_MAGIC = 0x55aaf11f;
+        $FILE_HDR_LEN = 20;
+        $FILENAME_LEN = 12;
+        $MAX_BOOTCONF_SIZE = 2024;
+
+        $offset = $magic = $len = 0;
+        $found = false;
+
+        while ($offset+8 < strlen($data))
+        {
+            list($magic, $len) = array_values(unpack("Nmagic/Nlen", $data, $offset));
+            if (($magic & $MAGIC_MASK) != $MAGIC)
+            {
+                // EEPROM corrupt
+                return false;
+            }
+
+            if ($magic == $FILE_MAGIC)
+            {
+                if (Str::startsWith(substr($data, $offset+8, $FILE_HDR_LEN), "bootconf.txt\0"))
+                {
+                    $found = true;
+                    break;
+                }
+            }
+
+            $offset += 8 + $len;
+            $offset = ($offset + 7) & ~7;
+        }
+
+        if (!$found)
+            return false;
+
+        $datalen = $len - $FILENAME_LEN - 4;
+
+        if ($datalen < 0)
+            return false;
+
+        return substr($data, $offset+4+$FILE_HDR_LEN, $datalen);
     }
 }
