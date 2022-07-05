@@ -151,6 +151,7 @@ class ScriptExecuteController extends Controller
 
             $fscript->script = "#!/bin/sh\n"
                              . "set -e\n"
+                             . "sync; echo 3 > /proc/sys/vm/drop_caches\n"
                              . 'READ_SHA256=$('."$ddline | sha256sum | awk '{print $1}')\n"
                              . 'echo Computed SHA256: "$READ_SHA256"'."\n"
                              . 'if [ "$READ_SHA256" = "'.$image->uncompressed_sha256.'" ]; then echo Verification successful!; else echo Verification failed; exit 2; fi'."\n";
@@ -217,6 +218,10 @@ class ScriptExecuteController extends Controller
         $this->cm->save();
 
         $msg = 'Provisioning completed.';
+        if ($req->query('verify'))
+        {
+            $msg .= " Verification successful.";
+        }
         if ($project->label_moment == 'postinstall' && $project->label)
         {
             $msg .= " Printing label.";

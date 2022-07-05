@@ -83,7 +83,7 @@ curl --retry 10 -g -F 'log=@/tmp/post.log' "http://{{ $server }}/scriptexecute?s
 @endif
 
 TEMP=`vcgencmd measure_temp`
-curl --retry 10 -g "http://{{ $server }}/scriptexecute?serial={{ $cm->serial }}&alldone=1&temp=${TEMP:5}"
+curl --retry 10 -g "http://{{ $server }}/scriptexecute?serial={{ $cm->serial }}&alldone=1&temp=${TEMP:5}&verify={{ $project->verify }}"
 
 echo ""
 echo "====="
