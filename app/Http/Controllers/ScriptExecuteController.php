@@ -34,10 +34,10 @@ class ScriptExecuteController extends Controller
         {
             return $this->registerLogFile($req);
         }
-        /*else if ($req->hasFile("eeprom_version"))
+        else if ($req->hasFile("eeprom_version"))
         {
             return $this->registerFirmware($req);
-        }*/
+        }
         else
         {
             return $this->startProvisoning($req);
@@ -48,6 +48,7 @@ class ScriptExecuteController extends Controller
     {
         $project = Project::getActive();
         $image   = $project ? $project->image : null;
+        $bootmode = $req->query('bootmode');
         $jumper  = $req->query('inversejumper');
         if ($jumper)
         {
@@ -204,6 +205,7 @@ class ScriptExecuteController extends Controller
             'server' => $server,
             'image_url' => $image ? "http://$server/uploads/".$image->filename_on_server : null,
             'image_extension' => $image ? $image->filename_extension : null,
+            'bootmode' => $bootmode,
             'preinstall_scripts' => $preinstall_scripts,
             'postinstall_scripts' => $postinstall_scripts
         ])->header('Content-Type', 'text/plain');
@@ -283,14 +285,20 @@ class ScriptExecuteController extends Controller
         return "";
     }
 
-    /*
+
     public function registerFirmware(Request $req)
     {
         $this->cm = Cm::where('serial', $this->serial)->firstOrFail();
         $this->cm->firmware = $req->file('eeprom_version')->get();
+
+        $regs = [];
+        if (preg_match("/BUILD_TIMESTAMP=([0-9]+)/", $this->cm->firmware, $regs) )
+        {
+            /* If we only have a BUILD_TIMESTAMP, also convert it to a human friendly date/time string */
+            $this->cm->firmware .= date('r', $regs[1]);
+        }
         $this->cm->save();
     }
-    */
 
     public function logInfo($msg, $loglevel = 'info')
     {

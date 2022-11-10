@@ -1,3 +1,15 @@
+cmprovision4 (1.6.1) unstable; urgency=medium
+
+  * Register current firmware version in database.
+    - if writing new EEPROM firmware, the file name that is written.
+    - if CM4 was USB booted obtain current EEPROM firmware image
+      with flashrom and analyze that.
+    - otherwise run "vcgencmd bootloader_version"
+  * Make sure rpiboot is at least version 20220504~214218 for
+    compatibility with rev. 5 CM4 modules
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Thu, 10 Nov 2022 22:01:46 +0100
+
 cmprovision4 (1.6) unstable; urgency=medium
 
   * Read EEPROM settings from firmware file instead of hard-coding

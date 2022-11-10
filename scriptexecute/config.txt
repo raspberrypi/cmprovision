@@ -1,16 +1,16 @@
-dtoverlay=dwc2,dr_mode=peripheral
-
 # Set the pull ups for jumper reading
 gpio=5,13,21=pu
 
 initramfs scriptexecute.img
 
 [cm4]
+dtoverlay=dwc2
 # For flashrom
 dtparam=audio=off
 dtoverlay=spi-gpio40-45
 
 [pi3]
 # Use USB over Ethernet on CM3
+dtoverlay=dwc2,dr_mode=peripheral
 cmdline=cmdline.txt.ipv6ll
 
