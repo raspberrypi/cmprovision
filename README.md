@@ -1,7 +1,13 @@
 # Raspberry Pi Compute Module Provisioning System #
 
-Web application to mass program compute modules; designed to run on a Raspberry Pi 4. Compute Module 3, 3+ and 4 are supported.
+Web application to mass program compute modules; designed to run on a Raspberry Pi 4. Compute Module 3, 3+ and 4 are supported out-of-the-box.
+Pi 4 boards can also be provisioned, but that requires that network boot is enabled in EEPROM settings first.
 
+![screenshot](https://user-images.githubusercontent.com/1123701/209007803-7cc38d14-7f07-4910-8108-87323d25ac20.png)
+
+## Documentation ##
+
+Full documentation is available on the Product Information Portal: [Using the Compute Module Provisioner.pdf](https://pip.raspberrypi.com/categories/685-whitepapers-app-notes/documents/RP-003468-WP/Using-the-Compute-Module-Provisioner.pdf)
 
 ## Provisioning Compute Module 4 Devices ##
 
@@ -77,6 +83,12 @@ You can now access the web interface with a web browser on the wireless LAN IP a
 
 During provisioning of CM3 and CM3+ devices, a small utility operating system, `scriptexecute`, is USB booted on each compute module. This configures the compute modules as  USB network adapters, and expects to be able to reach the provisioning server on predictable IPv6 link-local addresses that can be calculated based on the MAC address that each compute module chooses for its USB network interface. On Raspberry Pi OS, this is configured automatically by putting `slaac hwaddr` in `/etc/dhcpcd.conf`, however if your OS does not use `dhcpcd` as its network manager, then you will need to set this up manually. Examples of alternate network managers include `systemd-networkd` and `Network Manager`. How you set this up depends on the exact network manager used by your Linux distribution, so we cannot advise on how to do this.
 
+## Provisioning Raspberry Pi 4 boards ##
+
+It is also possible to use the system to provision regular Raspberry Pi 4 boards, instead of CM4 modules.
+However that requires that network boot is enabled first in the EEPROM settings of each Pi 4.
+
+You can create a SD card that enables that with [Imager](https://www.raspberrypi.com/software/), by going to: "Choose OS" -> "Misc utility images" -> "Bootloader" -> "Network boot"
 
 ## Development ##
 
