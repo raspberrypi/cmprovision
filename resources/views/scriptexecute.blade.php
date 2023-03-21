@@ -61,7 +61,7 @@ blkdiscard -v $STORAGE || true
 echo Writing image from {{ $image_url }} to $STORAGE
 curl --retry 10 -g "{{ $image_url }}" \
 @if ($image_extension == 'gz') | gzip -dc @elseif ($image_extension == 'xz') | xz -dc @elseif ($image_extension == 'bz2') | bunzip2 -dc @endif \
- | dd of=$STORAGE conv=fsync obs=1M >/tmp/dd.log >&1
+ | dd of=$STORAGE conv=fsync obs=1M >/tmp/dd.log 2>&1
 RETCODE=$?
 if [ $RETCODE -eq 0 ]; then
     echo Original image written successfully

@@ -68,6 +68,7 @@ class ScriptExecuteController extends Controller
         {
             $memoryInGb = round( ($req->query("memorysize")+200000)/1024/1024 );
         }
+        $storage_bytes = $req->query('storagesize') ? $req->query('storagesize')*512 : null;
 
         $this->cm = Cm::updateOrCreate(['serial' => $this->serial], [
             'serial' => $this->serial,
@@ -75,7 +76,7 @@ class ScriptExecuteController extends Controller
                         : "b8:27:eb:".substr($this->serial, -6, 2).":".substr($this->serial, -4, 2).":".substr($this->serial, -2, 2),
             'model'  => $req->query('model'),
             'memory_in_gb' => $memoryInGb,
-            'storage' => $req->query('storagesize') ? $req->query('storagesize')*512 : null,
+            'storage' => $storage_bytes,
             'firmware' => $project ? $project->eeprom_firmware : null,
             'cid' => $req->query('cid'),
             'csd' => $req->query('csd'),
@@ -108,7 +109,19 @@ class ScriptExecuteController extends Controller
             {
                 $this->logInfo("Image is not a valid disk image. Uncompressed size not dividable by sector size of 512 bytes.", "error");
                 return "echo 'Image is not a valid disk image. Uncompressed size not dividable by sector size of 512 bytes.'";
-
+            }
+        }
+        if ($image && $project->storage == '/dev/mmcblk0')
+        {
+            if (!$storage_bytes)
+            {
+                $this->logInfo("Missing eMMC/SD card.", "error");
+                return "echo 'Missing eMMC/SD card.'";
+            }
+            if ($image->uncompressed_size && $storage_bytes < $image->uncompressed_size)
+            {
+                $this->logInfo("Image does not fit in storage. Uncompressed image size: ".$image->uncompressed_size." bytes. Available space: ".$storage_bytes." bytes.", "error");
+                return "echo 'Image does not fit in storage.'";
             }
         }
 
