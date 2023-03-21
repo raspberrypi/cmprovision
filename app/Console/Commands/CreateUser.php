@@ -85,7 +85,7 @@ class CreateUser extends Command
             'password' => Hash::make($pass1),
         ]);
 
-        echo "User created";
+        echo "User created\n";
 
         return 0;
     }
