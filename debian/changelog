@@ -6,6 +6,7 @@ cmprovision4 (1.6.2) unstable; urgency=medium
   * Improve error reporting when users try to provision Pi4/CM4 Lite
     modules but forget to insert SD card. Or if the image is bigger
     than cards' capacity.
+  * Update dependencies
 
  -- Floris Bos <bos@je-eigen-domein.nl>  Tue, 21 Mar 2023 15:14:18 +0100
 

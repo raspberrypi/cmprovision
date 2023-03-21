@@ -16,15 +16,15 @@
         "laravel/jetstream": "^2.2",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
-        "livewire/livewire": "^2.0"
+        "livewire/livewire": "^2.0",
+        "phpunit/phpunit": "^9.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "nunomaduro/collision": "^5.0"
     },
     "config": {
         "optimize-autoloader": true,
