@@ -75,7 +75,6 @@ class Settings extends Component
     {
         $confFile = base_path('etc/dnsmasq.conf');
         $extraConf = "";
-        $lines = explode("\n", $oui_filter);
         $hosts = Host::orderBy('ip')->get();
         foreach ($hosts as $host)
         {
