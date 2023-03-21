@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\CmProvisioningComplete;
 use App\Models\Cm;
 use App\Models\Cmlog;
 use App\Models\Project;
@@ -234,6 +235,9 @@ class ScriptExecuteController extends Controller
         {
             $this->printLabel();
         }
+
+        // Emit event
+        CmProvisioningComplete::dispatch($this->cm);
 
         return "";
     }
