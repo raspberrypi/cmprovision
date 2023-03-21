@@ -69,6 +69,11 @@ case "$1" in
         deb-systemd-invoke restart dhcpcd || true
     fi
 
+    # The dnsmasq is restarted for provisioning newer CM4.
+    if [ -e /var/lib/cmprovision/etc/dnsmasq.conf ]; then
+        deb-systemd-invoke restart cmprovision-dnsmasq.service || true
+    fi
+
   ;;
 esac
 
