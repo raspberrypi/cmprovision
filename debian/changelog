@@ -1,3 +1,14 @@
+cmprovision4 (1.6.2) unstable; urgency=medium
+
+  * REMOVES OUI (MAC ADDRESS) FILTER. Will now provision any device
+    with CM4/PI4 GUID in the provisioning network. Prevents
+    configuration changes every time a new MAC range is introduced.
+  * Improve error reporting when users try to provision Pi4/CM4 Lite
+    modules but forget to insert SD card. Or if the image is bigger
+    than cards' capacity.
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Tue, 21 Mar 2023 15:14:18 +0100
+
 cmprovision4 (1.6.1) unstable; urgency=medium
 
   * Register current firmware version in database.

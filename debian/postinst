@@ -60,6 +60,8 @@ case "$1" in
         /var/lib/cmprovision/artisan migrate
         # Restart rpiboot just in case an upgrade was triggered by the new version requirement in 'control' file
         deb-systemd-invoke restart cmprovision-rpiboot || true
+        # Restart dnsmasq
+        deb-systemd-invoke restart cmprovision-dnsmasq || true
     fi
 
     # The Ethernet-over-USB method used for provisioning CM3 requires server has predicatable IPv6 link-local addresses

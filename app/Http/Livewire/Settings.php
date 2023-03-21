@@ -9,25 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class Settings extends Component
 {
-    public $dnsmasqRunning, $rpibootRunning, $logOutput, $logTitle, $oui_filter = false;
+    public $dnsmasqRunning, $rpibootRunning, $logOutput, $logTitle;
     public $ip, $mac, $detectedMacs;
     public $hosts;
     public $logModalOpen = false, $staticModalOpen = false;
-    const DEFAULT_OUI_FILTER = "b8:27:eb:*:*:*\ndc:a6:32:*:*:*\ne4:5f:01:*:*:*\n";
 
     public function render()
     {
         $this->dnsmasqRunning = $this->isActive('cmprovision-dnsmasq');
         $this->rpibootRunning = $this->isActive('cmprovision-rpiboot');
-        
-        if (!$this->oui_filter)
-        {
-            $s = Setting::find("oui_filter");
-            if ($s)
-                $this->oui_filter = $s->value;
-            else
-                $this->oui_filter = self::DEFAULT_OUI_FILTER;
-        }
         $this->hosts = Host::orderBy('ip')->get();
 
         return view('livewire.settings');
@@ -81,52 +71,11 @@ class Settings extends Component
         $this->logModalOpen = $this->staticModalOpen = false;
     }
 
-    public function saveDHCPsettings()
-    {
-        $this->oui_filter = str_replace("\r", "", $this->oui_filter);
-
-        Validator::extend('oui_filter',
-        function($attribute, $value, $parameters, $validator) {
-            $lines = explode("\n", $value);
-            foreach ($lines as $line)
-            {
-                $line = trim($line);
-
-                if ($line && !preg_match("/^([*0-9A-Fa-f]{1,2}[:]){5}([*0-9A-Fa-f]{1,2})$/", $line))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }, "Invalid OUI filter");
-
-        $this->validate(['oui_filter' => 'required|oui_filter']);
-        Setting::updateOrCreate(['key' => 'oui_filter'], ['value' => $this->oui_filter]);
-
-        $this->regenDnsmasqConfAndRestart();
-    }
-
     protected function regenDnsmasqConfAndRestart()
     {
         $confFile = base_path('etc/dnsmasq.conf');
         $extraConf = "";
-        $s = Setting::find("oui_filter");
-        if ($s)
-            $oui_filter = $s->value;
-        else
-            $oui_filter = self::DEFAULT_OUI_FILTER;
-
         $lines = explode("\n", $oui_filter);
-        foreach ($lines as $line)
-        {
-            $line = trim($line);
-
-            if ($line)
-            {
-                $extraConf .= "dhcp-mac=set:client_is_a_pi,$line\n";
-            }
-        }
         $hosts = Host::orderBy('ip')->get();
         foreach ($hosts as $host)
         {
@@ -148,7 +97,7 @@ class Settings extends Component
 
         foreach ($oldConfLines as $line)
         {
-            if (strpos($line, "dhcp-mac=") === 0 || strpos($line, "dhcp-host=") === 0)
+            if (strpos($line, "dhcp-host=") === 0)
                 continue;
 
             $newConf .= $line."\n";

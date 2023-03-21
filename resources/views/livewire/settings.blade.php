@@ -33,13 +33,6 @@
                     </div>
                 </div>
                 @endif
-
-                <div class="mb-4">
-                    <label for="oui_filter" class="block text-gray-700 text-sm font-bold mb-2">MAC addresses to provision:</label>
-                    <textarea wrap="off" type="text" id="oui_filter" name="oui_filter" wire:model.defer="oui_filter" class="h-36 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-                    @error('oui_filter') <span class="text-red-500">{{ $message }}</span>@enderror
-                </div>
-
                 <div class="mb-4">
                     <div class="block text-gray-700 text-sm font-bold mb-2">Static IP assignments:</div>
                 </div>
@@ -65,14 +58,8 @@
                     </tbody>
                 </table>
                 <button wire:click="addStaticIP()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Add new assignment</button>
-
-            </div>
-            <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
-                <button type="button" wire:click="saveDHCPsettings()" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-base font-medium text-white tracking-widest hover:bg-green-500 focus:outline-none focus:border-green-700 focus:shadow-outline-green disabled:opacity-25 transition ease-in-out duration-150">Save</button>
             </div>
         </div>
-
-
 
         <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
