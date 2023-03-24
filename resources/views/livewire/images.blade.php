@@ -42,7 +42,7 @@
                 <tbody>
                     @forelse($images as $i)
                     <tr>
-                        <td class="border px-4 py-2">{{ $i->filename }} (added {{ date_format($i->created_at, "d-M-Y") }})</td>
+                        <td class="border px-4 py-2"><span style="word-break: break-all;">{{ $i->filename }}</span> (added {{ date_format($i->created_at, "d-M-Y") }})</td>
                         <td class="border px-4 py-2">
                             <nobr>Comp.: {{ number_format($i->filesize()/1000000000,1) }} GB</nobr><br>
                             <nobr>Uncomp.: {{ $i->uncompressed_size ? number_format($i->uncompressed_size/1000000000,1) : 'unknown' }} GB</nobr>
