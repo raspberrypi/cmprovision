@@ -1,3 +1,11 @@
+cmprovision4 (1.6.3) unstable; urgency=medium
+
+  * Workaround for boot firmware sending GUID magic in big-endian
+    instead of little-endian.
+  * Word-wrap image file name on any character.
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Tue, 28 Mar 2023 22:45:29 +0200
+
 cmprovision4 (1.6.2) unstable; urgency=medium
 
   * REMOVES OUI (MAC ADDRESS) FILTER. Will now provision any device
