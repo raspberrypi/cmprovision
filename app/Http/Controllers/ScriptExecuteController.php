@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Events\CmProvisioningComplete;
 use App\Models\Cm;
 use App\Models\Cmlog;
+use App\Models\EthernetSwitch;
 use App\Models\Project;
 use App\Models\Script;
 use App\Models\Setting;
@@ -51,7 +52,16 @@ class ScriptExecuteController extends Controller
         $image   = $project ? $project->image : null;
         $bootmode = $req->query('bootmode');
         $jumper  = $req->query('inversejumper');
-        if ($jumper)
+        $switchIpSetting = Setting::find('ethernetswitch_ip');
+        $switchCommunitySetting = Setting::find('ethernetswitch_snmp_community');
+
+        if ($switchIpSetting && $switchIpSetting->value && $req->query('mac')
+            && $switchCommunitySetting && $switchCommunitySetting->value)
+        {
+            $switch = new EthernetSwitch($switchIpSetting->value, $switchCommunitySetting->value);
+            $board = $switch->getPortNameByMac($req->query('mac'));
+        }
+        else if ($jumper)
         {
             // Inverse jumper bits
             for ($i=0; $i<strlen($jumper); $i++)

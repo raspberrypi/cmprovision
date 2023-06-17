@@ -1,3 +1,12 @@
+cmprovision4 (1.6.4) unstable; urgency=medium
+
+  * Add support for detecting which network port devices are connected
+    to when using a managed Ethernet switch supporting SNMP BRIDGE-MIB.
+    For now: to setup run:
+      sudo /var/lib/cmprovision/artisan ethernetswitch:configure
+
+ -- Floris Bos <bos@je-eigen-domein.nl>  Sat, 17 Jun 2023 19:17:15 +0200
+
 cmprovision4 (1.6.3) unstable; urgency=medium
 
   * Workaround for boot firmware sending GUID magic in big-endian
