@@ -48,13 +48,6 @@
                         @endforeach
                       </optgroup>
                       @endif
-                      @if (count($beta_firmware))
-                      <optgroup label="beta">
-                        @foreach ($beta_firmware as $fw)
-                        <option value="{{ $fw->path }}">{{ $fw->name }}</option>
-                        @endforeach
-                      </optgroup>
-                      @endif
                   </select>
                   @error('firmware') <span class="text-red-500">{{ $message }}</span>@enderror
               </div>

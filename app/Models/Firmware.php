@@ -33,7 +33,7 @@ class Firmware
     public static function all()
     {
         $entries = [];
-        $channels = ["stable", "beta"];
+        $channels = ["latest"];
 
         foreach ($channels as $channel)
         {

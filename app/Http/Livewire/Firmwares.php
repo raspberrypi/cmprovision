@@ -39,7 +39,7 @@ class Firmwares extends Component
             if (!$prefix)
                 throw new \Exception("Error listing .zip file");
 
-            $prefix .= "firmware/";
+            $prefix .= "firmware-2711/";
 
             for ($i = 1; $i < $zip->numFiles; $i++)
             {
