@@ -7,6 +7,8 @@ source .env
 
 # IMG_NAME="facentry-image.img.xz"
 IMG_NAME="testfile2.txt"
+NEW_IMG_NAME=$(date +%F-%H%M)-raspios-bullseye-arm64-lite.img.xz
+echo "NEW_IMG_NAME" > new_name.txt
 # Fetch current version and compare to file
 CURRENT_VERSION_FILE="current_version.txt"
 OLD_VERSION_FILE="old_version.txt"
@@ -51,6 +53,7 @@ function fetch_current_version_meta {
 }
 
 function fetch_updated_img() {
+    echo "$NEW_IMG_NAME"
     echo "Entering fetch_updated_img function"
     az storage azcopy blob download \
     --container images \
@@ -59,6 +62,7 @@ function fetch_updated_img() {
     --source "$IMG_NAME" \
     --account-key "$ACC_KEY"
     mv "$CURRENT_VERSION_FILE" "$OLD_VERSION_FILE" 
+    mv "$IMG_NAME" "$NEW_IMG_NAME"
 }
 
 # Function to compare two version files
@@ -80,7 +84,10 @@ function compare_versions {
         # curl 'http://10.69.110.20/addImage' \
         #   -X 'POST' \
         # our custom endpoint under ap/Console/Commands
-        # curl http://localhost/UpdateImage.php --user "name:password"
+        # curl http://localhost/UpdateImage.php --user "name:password" // OR
+        # curl --request POST --data-binary "@NEW_IMG_NAME" http://localhost/api/UpdateImage
+        # cleanup
+        # rm new_name.txt
     fi
 }
 
