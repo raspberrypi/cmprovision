@@ -11,6 +11,14 @@ IMG_NAME="testfile2.txt"
 CURRENT_VERSION_FILE="current_version.txt"
 OLD_VERSION_FILE="old_version.txt"
 
+if [ ! -f .env ]; then
+    echo "No env file present. Please refer to the .env.example file."
+    echo "Exiting..."
+    exit
+else
+    echo "Env read, continuing"
+fi
+
 if ! command -v az &> /dev/null; then
     echo "az is not installed, pleae install with the following command;"
     echo "curl -L https://aka.ms/InstallAzureCli | bash"
