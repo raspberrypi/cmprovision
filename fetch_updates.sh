@@ -7,8 +7,9 @@ source .env
 
 # IMG_NAME="facentry-image.img.xz"
 IMG_NAME="testfile2.txt"
-NEW_IMG_NAME=$(date +%F-%H%M)-raspios-bullseye-arm64-lite.img.xz
-echo "NEW_IMG_NAME" > new_name.txt
+CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
+NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
+NEW_IMG_STORAGE_PATH="/var/lib/cmprovision/storage/app"
 # Fetch current version and compare to file
 CURRENT_VERSION_FILE="current_version.txt"
 OLD_VERSION_FILE="old_version.txt"
@@ -62,7 +63,7 @@ function fetch_updated_img() {
     --source "$IMG_NAME" \
     --account-key "$ACC_KEY"
     mv "$CURRENT_VERSION_FILE" "$OLD_VERSION_FILE" 
-    mv "$IMG_NAME" "$NEW_IMG_NAME"
+    mv "$IMG_NAME" "$NEW_IMG_STORAGE_PATH/$NEW_IMG_NAME"
 }
 
 # Function to compare two version files
@@ -79,13 +80,8 @@ function compare_versions {
         fetch_updated_img
         echo "Download complete"
         # Call the PHP file to update cmprovision project
-        # passing new file to upload; $IMG_NAME
-        # standard manual upload;
-        # curl 'http://10.69.110.20/addImage' \
-        #   -X 'POST' \
-        # our custom endpoint under ap/Console/Commands
-        # curl http://localhost/UpdateImage.php --user "name:password" // OR
-        # curl --request POST --data-binary "@NEW_IMG_NAME" http://localhost/api/UpdateImage
+        # passing new file to upload;
+        # php artisan import:image $NEW_IMG_NAME
         # cleanup
         # rm new_name.txt
     fi
