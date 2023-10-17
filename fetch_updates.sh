@@ -79,12 +79,9 @@ function compare_versions {
         echo "New version found, downloading"
         fetch_updated_img
         echo "Download complete"
-        # Call the PHP file to update cmprovision project
-        # passing new file to upload;
-        # cd /var/lib/cmprovision/
-        # php artisan import:image $NEW_IMG_NAME
-        # cleanup
-        # rm new_name.txt
+        # import the new image to the project and set as active;
+        cd /var/lib/cmprovision/
+        php artisan import:image $NEW_IMG_NAME
     fi
 }
 
