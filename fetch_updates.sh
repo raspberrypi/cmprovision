@@ -5,8 +5,7 @@
 # secrets eg ACC_KEY are sourced from .env file
 source .env
 
-# IMG_NAME="facentry-image.img.xz"
-IMG_NAME="testfile2.txt"
+IMG_NAME="facentry-image.img.xz"
 NEW_IMG_STORAGE_PATH="/var/lib/cmprovision"
 # Fetch current version and compare to file
 CURRENT_VERSION_FILE="current_version.txt"
@@ -49,21 +48,19 @@ function fetch_current_version_meta {
     --query 'properties.lastModified' \
     > "$CURRENT_VERSION_FILE"
     echo "Current version meta file created"
-    CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
-    NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
 }
 
 function fetch_updated_img() {
-    echo "$NEW_IMG_NAME"
+    echo "Fetching $NEW_IMG_NAME"
+    CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
+    NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
     echo "Entering fetch_updated_img function"
     az storage blob download \
     --account-name facentrytest  \
     --container-name images \
     --name facentry-image.img.xz \
-    --file "$CURRENT_VERSION_FILE" \
+    --file "$NEW_IMG_NAME" \
     --account-key "$ACC_KEY"
-    mv "$CURRENT_VERSION_FILE" "$OLD_VERSION_FILE" 
-    mv "$IMG_NAME" "$NEW_IMG_STORAGE_PATH/$NEW_IMG_NAME"
 }
 
 # Function to compare two version files
@@ -79,14 +76,18 @@ function compare_versions {
         echo "New version found, downloading"
         fetch_updated_img
         echo "Download complete"
-        # import the new image to the project and set as active;
-        cd /var/lib/cmprovision/ || echo "CMProvision is not installed - exiting." && exit 1
+	sudo mv "$NEW_IMG_NAME" "$NEW_IMG_STORAGE_PATH/$NEW_IMG_NAME"
+	echo "New image ready for import"
+	sudo chown www-data:www-data "$NEW_IMG_STORAGE_PATH/$NEW_IMG_NAME"
+    # import the new image to the project and set as active;
+    cd /var/lib/cmprovision/
+	echo "Importing new image"
         sudo php artisan import:image "$NEW_IMG_NAME"
     fi
 }
 
 fetch_current_version_meta
 compare_versions
-
+mv "$HOME/$CURRENT_VERSION_FILE" "$HOME/$OLD_VERSION_FILE"
 echo "Completed"
 # END OF IMG UPDATER
