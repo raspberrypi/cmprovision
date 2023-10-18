@@ -7,9 +7,7 @@ source .env
 
 # IMG_NAME="facentry-image.img.xz"
 IMG_NAME="testfile2.txt"
-CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
-NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
-NEW_IMG_STORAGE_PATH="/var/lib/cmprovision/storage/app"
+NEW_IMG_STORAGE_PATH="/var/lib/cmprovision"
 # Fetch current version and compare to file
 CURRENT_VERSION_FILE="current_version.txt"
 OLD_VERSION_FILE="old_version.txt"
@@ -23,7 +21,7 @@ else
 fi
 
 if ! command -v az &> /dev/null; then
-    echo "az is not installed, pleae install with the following command;"
+    echo "az is not installed, please install with the following command;"
     echo "curl -L https://aka.ms/InstallAzureCli | bash"
     exit
 else
@@ -51,16 +49,18 @@ function fetch_current_version_meta {
     --query 'properties.lastModified' \
     > "$CURRENT_VERSION_FILE"
     echo "Current version meta file created"
+    CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
+    NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
 }
 
 function fetch_updated_img() {
     echo "$NEW_IMG_NAME"
     echo "Entering fetch_updated_img function"
-    az storage azcopy blob download \
-    --container images \
-    --destination "$IMG_NAME" \
-    --account-name facentrytest \
-    --source "$IMG_NAME" \
+    az storage blob download \
+    --account-name facentrytest  \
+    --container-name images \
+    --name facentry-image.img.xz \
+    --file "$CURRENT_VERSION_FILE" \
     --account-key "$ACC_KEY"
     mv "$CURRENT_VERSION_FILE" "$OLD_VERSION_FILE" 
     mv "$IMG_NAME" "$NEW_IMG_STORAGE_PATH/$NEW_IMG_NAME"
@@ -80,8 +80,8 @@ function compare_versions {
         fetch_updated_img
         echo "Download complete"
         # import the new image to the project and set as active;
-        cd /var/lib/cmprovision/
-        php artisan import:image $NEW_IMG_NAME
+        cd /var/lib/cmprovision/ || echo "CMProvision is not installed - exiting." && exit 1
+        sudo php artisan import:image "$NEW_IMG_NAME"
     fi
 }
 
