@@ -55,7 +55,7 @@ function fetch_current_version_meta {
 
 function fetch_updated_img() {
     echo "Fetching $NEW_IMG_NAME"
-    CURRENT_VERSION_DATE=$(cut -d ':' -f1 < current_version.txt | sed 's|["T]||g')
+    CURRENT_VERSION_DATE=$(sed -E 's/T/-/; s/[":T]//g' < current_version.txt | cut -c 1-15)
     NEW_IMG_NAME=${CURRENT_VERSION_DATE}-raspios-bullseye-arm64-lite.img.xz
     echo "Entering fetch_updated_img function"
     az storage blob download \
