@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\Image;
-use App\Models\Projects;
+use App\Models\Project;
 use App\Jobs\ComputeSHA256;
 
 class ImportNewImage extends Command
@@ -60,14 +60,14 @@ class ImportNewImage extends Command
             $i->filename_on_server = Str::random(40).".".$i->filename_extension;
         } while ( file_exists($i->imagepath()) );
 
-        move_uploaded_file($filepath, public_path("uploads").'/'.$i->filename_on_server);
+        rename($filepath, public_path("uploads").'/'.$i->filename_on_server);
         $i->save();
 
         /* Queue SHA256 calculation job */
         ComputeSHA256::dispatch($i);
 
         // find the active project and update the image reference
-        $project = Projects::getActive();
+        $project = Project::getActive();
         $project->image_id = $i->id;
         $project->save();
     }
