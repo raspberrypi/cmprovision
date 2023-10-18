@@ -1,4 +1,7 @@
 #!/bin/bash
+# to run with cron add the following 
+# it will run at 5 past each hour between 08.00 and 18.05 hrs
+# 5 8-18 * * * /bin/bash /home/admin/fetch_updates.sh 2>&1 | logger -t fetch_updates
 # TODO
 # add openport to provisioner
 
