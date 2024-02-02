@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Firmware;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\GuzzleException;
 
 class Firmwares extends Component
 {
@@ -18,54 +20,88 @@ class Firmwares extends Component
 
     public function update()
     {
+        session()->flash('message', 'Download started, please wait...');
+        Log::info("Firmware update started");
         $path = Firmware::basedir();
-        if (!file_exists($path))
-            mkdir($path);
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
+            Log::info("Created directory: " . $path);
+        }
 
-        $tmpfile = tempnam(sys_get_temp_dir(), "firmware-download");            
-        try
-        {
+        try {
             $client = new \GuzzleHttp\Client();
-            $r = $client->get('https://api.github.com/repos/raspberrypi/rpi-eeprom/zipball', ['sink' => $tmpfile]);
-            if ($r->getStatusCode() != 200)
-                throw new \Exception("Expected HTTP response code 200, but received ".$r->getStatusCode()." ".$r->getReasonPhrase() );
+            $tmpfile = tempnam(sys_get_temp_dir(), "firmware-download");
+            Log::info("Temporary file created: " . $tmpfile);
+
+            $response = $client->get('https://github.com/raspberrypi/rpi-eeprom/archive/refs/heads/master.zip', [
+                'sink' => $tmpfile,
+                'allow_redirects' => true
+            ]);
+            Log::info("HTTP request sent, response status: " . $response->getStatusCode());
+
+            if ($response->getStatusCode() != 200) {
+                throw new \Exception("Expected HTTP response code 200, but received " . $response->getStatusCode());
+            }
+
+            clearstatcache(true, $tmpfile);
+            $downloadedFileSize = filesize($tmpfile);
+            Log::info("Downloaded file size: " . $downloadedFileSize);
+            if ($downloadedFileSize == 0) {
+                throw new \Exception("Downloaded file is empty");
+            }
 
             $zip = new \ZipArchive;
-            if (!$zip->open($tmpfile))
-                throw new \Exception("Error opening .zip file");
+            $openResult = $zip->open($tmpfile);
+            if ($openResult !== true) {
+                throw new \Exception("Error opening .zip file, ZipArchive open() returned: " . $openResult);
+            }
 
-            // We only want rpi-eeprom-something/firmware/* of the .zip
-            $prefix = $zip->getNameIndex(0);
-            if (!$prefix)
-                throw new \Exception("Error listing .zip file");
+            if ($zip->numFiles == 0) {
+                throw new \Exception("Zip file contains no files");
+            }
+            Log::info("file in .zip file " . $zip->numFiles);
 
-            $prefix .= "firmware/";
+            $allowedSubfolders = ['latest', 'feature-specific'];
+            $found = false; // Track if any matching file is found
 
-            for ($i = 1; $i < $zip->numFiles; $i++)
-            {
-                $name = Str::of($zip->getNameIndex($i));
-                if (!$name->startsWith($prefix) || $name->contains("../"))
-                    continue;
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
+                if (preg_match('#rpi-eeprom-.+?/firmware-2711/(' . implode('|', $allowedSubfolders) . ')/(.*)#', $name, $matches)) {
+                    $found = true; // Mark as found when a match is detected
+                    $subfolder = $matches[1];
+                    $subfolderPath = $matches[2];
 
-                $nameWithoutPrefix = $name->substr(strlen($prefix));
-                if (substr($nameWithoutPrefix, -1) == "/")
-                {
-                    @mkdir($path."/".$nameWithoutPrefix, 0755, true);
-                }
-                else
-                {
-                    @file_put_contents($path."/".$nameWithoutPrefix, $zip->getFromIndex($i));
+                    $destPath = $path . "/" . $subfolder . "/" . $subfolderPath;
+
+                    if (substr($name, -1) === "/") {
+                        if (!is_dir($destPath)) {
+                            mkdir($destPath, 0755, true);
+                            Log::info("Created directory: " . $destPath);
+                        }
+                    } else {
+                        $directoryPath = dirname($destPath);
+                        if (!is_dir($directoryPath)) {
+                            mkdir($directoryPath, 0755, true);
+                        }
+                        if (!is_dir($destPath)) {
+                            file_put_contents($destPath, $zip->getFromIndex($i));
+                            Log::info("File extracted: " . $destPath);
+                        }
+                    }
                 }
             }
 
-            $zip->close();
+            if (!$found) {
+                throw new \Exception("Downloaded file has not the expected content.");
+            }
 
+            $zip->close();
             session()->flash('message', 'Firmware updated');
+        } catch (\Exception | GuzzleException $e) {
+            Log::error("Error: " . $e->getMessage());
+            session()->flash('message', 'Error: ' . $e->getMessage());
+        } finally {
+            @unlink($tmpfile);
         }
-        catch (\Exception $e)
-        {
-            session()->flash('message', 'Error: '.$e->getMessage() );
-        }
-        @unlink($tmpfile);
     }
 }
