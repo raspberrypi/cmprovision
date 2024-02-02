@@ -22,7 +22,7 @@ class Firmwares extends Component
         if (!file_exists($path))
             mkdir($path);
 
-        $tmpfile = tempnam(sys_get_temp_dir(), "firmware-download");            
+        $tmpfile = tempnam(sys_get_temp_dir(), "firmware-download");
         try
         {
             $client = new \GuzzleHttp\Client();
